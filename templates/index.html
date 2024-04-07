@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    <title>Students Data Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}" >
+    <style>
+   @import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
+*
+{
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+.table{
+  margin: 10px;
+}
+body {
+  font-family: Arial, Tahoma, Serif;
+}
+
+nav {
+  display: flex;
+  justify-content:space-between; 
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #050b28;
+  color: #fff;
+  width: 100%;
+}
+
+nav ul {
+  display: flex;
+  list-style: none; 
+}
+
+nav li {
+  padding-left: 1rem;
+  color: #fff; 
+}
+
+nav a {
+  text-decoration: none;
+  color: #fff;
+}
+
+nav a:hover {
+  text-decoration: none;
+  color: rgb(173, 0, 0);
+}
+
+nav label:hover {
+  text-decoration: none;
+  color: rgb(173, 0, 0);
+}
+
+.home{
+  padding-top: 43px;
+}
+
+.push{
+  padding-top: 43px;
+}
+
+.empty{
+  height: 150px;  
+  display: flex;
+  justify-content: center;
+}
+
+.empty h3{
+  padding-top: 75px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+}
+ /* 
+  Extra small devices (phones, 600px and down) 
+*/
+@media only screen and (max-width: 600px) {
+  nav {
+    flex-direction: column;
+  }
+  nav ul {
+    flex-direction: column;
+    padding-top: 0.5rem;
+  }
+  nav li {
+    padding: 0.5rem 0;
+  }
+} 
+    </style>
+  </head>
+  <body>
+    <nav>
+      <h2 class="logo">STUDENT.DATABASE</h2>
+    <ul>
+    <li class="home"> <a href="{{ url_for('index') }}">HOME</a> </li>
+    <li class="push" >
+    <a class="studentd" href="{{ url_for('student') }}">ADD A STUDENT DATA</a>
+  </li>
+    <li class="searched">
+    <form method="POST" action="/search">
+    <label for="search_term">SEARCH STUDENT:</label>
+    <input type="text" id="search_term" name="search_term">
+    <button class="search" style="background-color: #0074f8; color: #ffffff;" type="submit">Search</button>
+    </form>
+  </li>
+</ul>
+</nav>
+<div class="empty">
+
+  <h3> STUDENT DATA PORTAL</h3>
+
+</div>
+<div class="table">
+<table> 
+    <thead > 
+    <tr > 
+        <th >Id</th> 
+        <th >Sname</th> 
+        <th >Sclass</th>
+        <th >Hobbies</th>
+        <th >Grades</th>
+
+    </tr> 
+    </thead> 
+    <tbody> 
+        {% for row in value %}  
+            <tr style="font-weight: bolder; border: 1px solid black;"> 
+               <td >{{row.id}}</td> 
+               <td >{{row.sname}}</td> 
+               <td >{{row.sclass}}</td> 
+               <td >{{row.hobbies}}</td> 
+               <td >{{row.grades}}</td> 
+            </tr> 
+        {% endfor %} 
+    </tbody> 
+    <tfoot>
+      <tr>
+        <td colspan="5">
+          <div class="pagination">
+            <ul>
+              {% if value.has_prev %}
+                <li><a href="{{ url_for('index', page=value.prev_num) }}">Previous</a></li>
+              {% else %}
+                <li class="disabled"><span>Previous</span></li>
+              {% endif %}
+              
+              {% if value and value.pages %}
+                {% for num in range(1, value.pages + 1) %}
+                  {% if value.page == num %}
+                    <li class="active"><span>{{ num }}</span></li>
+                  {% else %}
+                    <li><a href="{{ url_for('index', page=num) }}">{{ num }}</a></li>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+
+              {% if value.has_next %}
+                <li><a href="{{ url_for('index', page=value.next_num) }}">Next</a></li>
+              {% else %}
+                <li class="disabled"><span>Next</span></li>
+              {% endif %}
+            </ul>
+          </div>
+        </td>
+      </tr>
+    </tfoot>
+</table> 
+</div>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Add your student info</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}" >
+
+  <style>
+    #choose-hobbies{
+      display: flex;
+      flex-grow: 20px;
+      gap: 20px;
+      flex-wrap: nowrap;
+    }
+  .hobby{
+      color: black;
+  font-size: 20px;
+  margin: 20px;
+  }
+      #chosen-hobbies, #options {
+          width: 350px;
+          padding: 20px;
+          border: 3px solid rgb(78, 6, 6);
+          text-align: center;
+      }
+      #options {
+          background-color: #f0f0f0;
+      }
+      body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+
+.form-control:focus {
+  border-color: #66afe9;
+}
+
+.hobby:hover {
+  border-color: #66afe9;
+}
+
+.group select{
+  color: black;
+  padding: 12px;
+  width: 250px;
+  border: none;
+  font-size: 20px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  -webkit-appearance: button;
+  appearance: button;
+  outline: none;
+}
+
+.group::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20%;
+  height: 100%;
+  text-align: center;
+  font-size: 28px;
+  line-height: 45px;
+  color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+}
+
+.group:hover::before {
+  color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.group select option {
+  padding: 30px;
+}
+
+body{
+    background-color: #061621;
+}
+.empty{
+  height: 60px;  
+  display: flex;
+  justify-content: center;
+  color: #fff;
+}
+
+.btn{
+  width: max-content;
+}
+
+.gap{
+  height: 20px;
+}
+
+form {
+    width: calc(100%-400px);
+    margin: 20px auto;
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.1);
+}
+
+form label,
+form input {
+    display: block;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+form button {
+    background-color: #4285f4;
+    color: #fff;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+
+form button:hover {
+    background-color: #357ae8;
+}
+
+
+</style>
+  </head>
+
+  <body>
+    <br>
+    <br>
+
+    <div class="container">
+
+      <div class="empty">
+
+        <h3> ADD STUDENT DATA</h3>
+      
+      </div>
+
+      <form action="/process" method="post">
+        <div class="form-group">
+          <label for="sname">sname</label>
+          <input type="text" id="inputName" name="sname" class="form-control" placeholder="Add student name here.." required autofocus>
+        </div>
+        <div class="form-group">
+          <label for="sclass">sclass</label>
+          <div class="group">
+          <select id="sclass" name="sclass" onchange="updateSclassInput()">
+            <option>1ST</option>
+            <option>2ND</option>
+            <option>3RD</option>
+            <option>4TH</option>
+            <option>5TH</option>
+            <option>6TH</option>
+            <option>7TH</option>
+            <option>8TH</option>
+            <option>9TH</option>
+            <option>10TH</option>
+            <option>11TH</option>
+            <option>12TH</option>
+          </select>
+        </div>
+        </div>
+        <input type="text" name="sclass" id="sclassInput">
+        <div class="form-group">
+          <label for="grades" >grades</label>
+            <textarea class="form-control" rows="1" id="grade" name="grades" placeholder="Add student grades here.." required></textarea>
+        </div>
+
+        <div id="choose-hobbies">
+          <div class="hobby" draggable="true" data-hobby-name="reading">
+            <h3>reading</h3>
+          </div>
+          <div class="hobby" draggable="true" data-hobby-name="movies-watching">
+            <h3>movies-watching</h3>
+          </div>
+          <div class="hobby" draggable="true" data-hobby-name="playing">
+            <h3>playing</h3>
+          </div>
+          <div class="hobby" draggable="true" data-hobby-name="singing">
+            <h3>singing</h3>
+          </div>
+          <div class="hobby" draggable="true" data-hobby-name="writing">
+            <h3>writing</h3>
+          </div>
+        </div>
+        <br>
+        <div></div>
+        <div id="chosen-hobbies" placeholder="drop student hobby here.."></div>
+        <br>
+        <input type="text" name="hobbies" value="">
+
+        <script>
+          const hobbies = document.querySelectorAll('.hobby');
+          const chosenHobbies = document.querySelector('#chosen-hobbies');
+          const hobbyInput = document.querySelector('input[name="hobbies"]');
+        
+          hobbies.forEach(hobby => {
+            hobby.addEventListener('dragstart', () => {
+              hobby.classList.add('dragging');
+            });
+        
+            hobby.addEventListener('dragend', () => {
+              hobby.classList.remove('dragging');
+            });
+          });
+        
+          chosenHobbies.addEventListener('dragover', (event) => {
+            event.preventDefault();
+          });
+        
+          chosenHobbies.addEventListener('drop', (event) => {
+            const hobby = document.querySelector('.dragging');
+            chosenHobbies.appendChild(hobby)
+        
+            hobbyInput.value = hobby.dataset.hobbyName;
+          });
+
+          const snameInput = document.querySelector('input[name="sname"]');
+
+          snameInput.addEventListener('input', () => {
+          const snameValue = snameInput.value;
+
+          if (!snameValue.match(/^[A-Za-z ]+$/)) {
+          alert('Please enter only alphabets and spaces in the student name');
+          snameInput.value = '';
+          }
+          });
+
+          const gradeInput = document.getElementById('grade');
+
+gradeInput.addEventListener('input', () => {
+  const gradeValue = parseFloat(gradeInput.value);
+
+  if (isNaN(gradeValue) || gradeValue < 0 || gradeValue > 10) {
+    alert('Please enter a valid grade between 0 and 10');
+    gradeInput.value = '';
+  }
+});
+          function updateSclassInput() {
+  const sclassInput = document.getElementById('sclassInput');
+  const sclassSelect = document.getElementById('sclass');
+  const selectedOption = sclassSelect[sclassSelect.selectedIndex];
+
+  sclassInput.value = selectedOption.value;
+}
+          </script>
+<div class="gap"></div>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+  </form>
+</div>
+</body>
+</html>
